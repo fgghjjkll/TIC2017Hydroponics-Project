@@ -1,4 +1,5 @@
 # TIC2017
+
 Telstra Innovation Challenge 2017
 
 This repository will contain all the information required to succeed in the Telstra Innovation Challenge.
