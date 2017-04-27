@@ -10,7 +10,7 @@
 ShieldInterface shieldif;
 IoTShield shield(&shieldif);
 Connection4G conn(true,&shieldif);
-LiquidCrystal_I2C lcd(0x20,16,2);
+LiquidCrystal_I2C lcd(0x20,20,4);
 dht11 DHT;
 #define DHT11_PIN 4
 
@@ -115,7 +115,7 @@ void loop() {
     humidityInt = DHT.humidity;
     Serial.print(F("[    ] Humidity: "));
     Serial.println(humidityInt);
-    lcd.setCursor(0,4);
+    lcd.setCursor(0,3);
     lcd.print("[    ] Humidity: ");
     lcd.print(humidityInt);
 
