@@ -126,6 +126,7 @@ void loop() {
     iotPlatform.sendMeasurement("TemperatureMeasurement", "TemperatureMeasurement", "Temperature (degrees Celsius)", tempString, "degrees Celsius");
 
     iotPlatform.sendMeasurement("MoistureMeasurement","MoistureMeasurement", "Moisture Raw Value", moistureInt, "value");
+
+    iotPlatform.sendMeasurement("HumidityMeasurement","HumidityMeasurement","Humidity (grams of water/cubic meter of air)",humidityInt,"grams of water/cubic meter of air");
     
 }
-
