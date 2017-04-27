@@ -130,8 +130,18 @@ void loop() {
     lcd.print("[    ] Humidity: ");
     lcd.print(humidityInt);
     } else {
-      //TO-DO: Print "No water" message to Serial and LCD
-      Serial.print("");
+      Serial.print("NO WATER REMAINING");
+      lcd.setCursor(0,2);
+      lcd.print("NO WATER REMAINING");
+    }
+
+    //Activate Pump when the moisture level reaches a critical level
+    if (moistureInt < 300){
+    // Uninterrupt the pump
+      digitalWrite(pumpPin, HIGH);
+    } else if (moistureInt > 500){
+    // Interrupt the pump
+      digitalWrite(pumpPin, LOW);
     }
     
     Serial.println("############################ Preparing to send MEASUREMENTS #############################");  
@@ -146,8 +156,3 @@ void loop() {
     
     
 }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> origin/master
