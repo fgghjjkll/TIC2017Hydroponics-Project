@@ -13,7 +13,6 @@ Connection4G conn(true,&shieldif);
 LiquidCrystal_I2C lcd(0x20,20,4);
 dht11 DHT;
 #define DHT11_PIN 4
-
 TelstraIoT iotPlatform(&conn,&shield);
 
 const char host[] = "tic2017team024.iot.telstra.com";
@@ -22,8 +21,13 @@ char id[8];
 char tenant[32];
 char username[32];
 char password[32];
+int buoyPin = 5; //Pin 5 is the water buoy
+int pumpPin = 7; //Pin 7 is the pump
 
 void setup() {
+  pinMode(buoyPin, INPUT); 
+  pinMode(pumpPin, OUTPUT); 
+  
   Serial.begin(115200);
   delay(500);
 
@@ -68,11 +72,21 @@ void loop() {
     char tempString[15];
     int moistureInt = 0;
     int humidityInt = 0;
+    int waterSwitch = 0;
 
     lcd.clear();
+    
+    //Read measurement from water buoy and digitalWrite to pumpPin accordingly
+    waterSwitch = digitalRead(buoyPin);
+    shield.getLightLevel(lightString);
+    shield.getTemperature(tempString);
+    moistureInt = analogRead(A0);
+    int chk = DHT.read(DHT11_PIN);    // READ DATA
+    humidityInt = DHT.humidity;
+    
+    if (waterSwitch == 1){
     Serial.println("############################ Preparing to read MEASUREMENTS #############################");
     //Read Light measurement from device
-    shield.getLightLevel(lightString);
     Serial.print(F("[    ] Light: "));
     Serial.println(lightString);
     lcd.setCursor(0,0);
@@ -80,7 +94,6 @@ void loop() {
     lcd.print(lightString);
     
     //Read temperature measurement from device
-    shield.getTemperature(tempString);
     Serial.print(F("[    ] Temp: "));
     Serial.println(tempString);
     lcd.setCursor(0,1);
@@ -88,14 +101,13 @@ void loop() {
     lcd.print(tempString);
 
     //Read moisture measurement from sensor
-    moistureInt = analogRead(A0);
     Serial.print(F("[    ] Moisture: "));
     Serial.println(moistureInt);
     lcd.setCursor(0,2);
     lcd.print("[    ] Moisture: ");
     lcd.print(moistureInt);
 
-    int chk = DHT.read(DHT11_PIN);    // READ DATA
+    
 //  switch (chk){
 //    case DHTLIB_OK:  
 //                Serial.print("OK,\t"); 
@@ -112,13 +124,16 @@ void loop() {
 //  }
 
     //Read humidity measurement from sensor
-    humidityInt = DHT.humidity;
     Serial.print(F("[    ] Humidity: "));
     Serial.println(humidityInt);
     lcd.setCursor(0,3);
     lcd.print("[    ] Humidity: ");
     lcd.print(humidityInt);
-
+    } else {
+      //TO-DO: Print "No water" message to Serial and LCD
+      Serial.print("");
+    }
+    
     Serial.println("############################ Preparing to send MEASUREMENTS #############################");  
     iotPlatform.sendMeasurement("LightMeasurement", "LightMeasurement", "Light level (lux)", lightString, "lux");
     
@@ -127,5 +142,7 @@ void loop() {
 
     iotPlatform.sendMeasurement("MoistureMeasurement","MoistureMeasurement", "Moisture Raw Value", moistureInt, "value");
     
+    
 }
+
 
