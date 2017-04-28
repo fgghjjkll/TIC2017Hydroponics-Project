@@ -6,13 +6,15 @@
 #include <LiquidCrystal_I2C.h>
 #include <dht11.h>
 
-
+// Initialize Shield, sensors, and other interfaces
 ShieldInterface shieldif;
 IoTShield shield(&shieldif);
 Connection4G conn(true,&shieldif);
 LiquidCrystal_I2C lcd(0x20,20,4);
 dht11 DHT;
 #define DHT11_PIN 4
+int buoyPin = 5; //Pin 5 is the water buoy
+int pumpPin = 8; //Pin 7 is the pump
 TelstraIoT iotPlatform(&conn,&shield);
 
 const char host[] = "tic2017team024.iot.telstra.com";
@@ -21,16 +23,17 @@ char id[8];
 char tenant[32];
 char username[32];
 char password[32];
-int buoyPin = 5; //Pin 5 is the water buoy
-int pumpPin = 8; //Pin 7 is the pump
 
 void setup() {
+  // Initialize pins for read or write
   pinMode(buoyPin, INPUT); 
   pinMode(pumpPin, OUTPUT); 
-  
+
+  // Initialize USB Serial Interface. Useful for debugging.
   Serial.begin(115200);
   delay(500);
 
+  // Initialize LCD Panel. Whilst Text displays, other setup tasks will be performed.
   lcd.init();
   Serial.println(F("[START] Starting Send All Measurments Script"));
 
@@ -39,7 +42,10 @@ void setup() {
   lcd.setCursor(0,1);
   lcd.print("Team 024");
   lcd.setCursor(0,2);
-  lcd.print("v0.4b");
+  lcd.print("v0.5a");
+
+  lcd.setCursor(0,3);
+  lcd.print("Connecting...");
   if(!shield.isShieldReady())
   {
      Serial.println("waiting for shield ...");
@@ -67,7 +73,8 @@ void setup() {
   iotPlatform.setHost(host,443);
   
   conn.openTCP(host,443);  
-
+  lcd.setCursor(0,3);
+  lcd.print("Connected..! ");
 }
 
 void loop() {
