@@ -53,7 +53,6 @@ void setup() {
   } else {
     Serial.println("Shield ready!");
   }
-//  while(Serial.available()==0); // Wait for serial character before starting
 
   Serial.println("Reading credentials...");
   shield.readCredentials(id,tenant,username,password);
@@ -78,6 +77,7 @@ void setup() {
 }
 
 void loop() {
+  // define and initialize measurement variables
     delay(1000);
     char lightString[15];
     char tempString[15];
@@ -85,6 +85,7 @@ void loop() {
     int humidityInt = 0;
     int waterSwitch = 0;
 
+    // refresh LCD screen
     lcd.clear();
     
     //Read measurement from water buoy and digitalWrite to pumpPin accordingly
@@ -139,10 +140,10 @@ void loop() {
       digitalWrite(pumpPin, LOW);
     }
     
+    //Send data to cloud
     Serial.println("############################ Preparing to send MEASUREMENTS #############################");  
     iotPlatform.sendMeasurement("LightMeasurement", "LightMeasurement", "Light level (lux)", lightString, "lux");
     
-//    shield.getTemperature(tempString);
     iotPlatform.sendMeasurement("TemperatureMeasurement", "TemperatureMeasurement", "Temperature (degrees Celsius)", tempString, "degrees Celsius");
 
     iotPlatform.sendMeasurement("MoistureMeasurement","MoistureMeasurement", "Moisture Raw Value", moistureInt, "value");
