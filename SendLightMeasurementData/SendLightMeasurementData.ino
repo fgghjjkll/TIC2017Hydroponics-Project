@@ -22,7 +22,7 @@ char tenant[32];
 char username[32];
 char password[32];
 int buoyPin = 5; //Pin 5 is the water buoy
-int pumpPin = 7; //Pin 7 is the pump
+int pumpPin = 8; //Pin 7 is the pump
 
 void setup() {
   pinMode(buoyPin, INPUT); 
@@ -35,7 +35,11 @@ void setup() {
   Serial.println(F("[START] Starting Send All Measurments Script"));
 
   lcd.backlight();
-  lcd.print("Hello, world!");
+  lcd.print("IoT Aquaponics");
+  lcd.setCursor(0,1);
+  lcd.print("Team 024");
+  lcd.setCursor(0,2);
+  lcd.print("v0.4b");
   if(!shield.isShieldReady())
   {
      Serial.println("waiting for shield ...");
@@ -153,6 +157,8 @@ void loop() {
     iotPlatform.sendMeasurement("MoistureMeasurement","MoistureMeasurement", "Moisture Raw Value", moistureInt, "value");
 
     iotPlatform.sendMeasurement("HumidityMeasurement","HumidityMeasurement","Humidity (grams of water/cubic meter of air)",humidityInt,"grams of water/cubic meter of air");
+
+    iotPlatform.sendMeasurement("WaterLevelMeasurement","WaterLevelMeasurement","Water Level (Enough(1)/Refill(0))",waterSwitch,"Enough(1)/Refill(0)");
     
     
 }
