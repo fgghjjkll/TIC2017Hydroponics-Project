@@ -118,22 +118,6 @@ void loop() {
     lcd.print("[    ] Moisture: ");
     lcd.print(moistureInt);
 
-    
-//  switch (chk){
-//    case DHTLIB_OK:  
-//                Serial.print("OK,\t"); 
-//                break;
-//    case DHTLIB_ERROR_CHECKSUM: 
-//                Serial.print("Checksum error,\t"); 
-//                break;
-//    case DHTLIB_ERROR_TIMEOUT: 
-//                Serial.print("Time out error,\t"); 
-//                break;
-//    default: 
-//                Serial.print("Unknown error,\t"); 
-//                break;
-//  }
-
     //Read humidity measurement from sensor
     Serial.print(F("[    ] Humidity: "));
     Serial.println(humidityInt);
